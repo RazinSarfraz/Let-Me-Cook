@@ -40,6 +40,30 @@ class FirebaseAuthService {
             throw new Error(error.message || "An error occurred while registering user");
         }
     }
+    
+    async loginWithGoogle(idToken) {
+        try {
+            // Verify the Google ID token
+            const credential = googleProvider.credential({
+                idToken: idToken,
+            });
+            const userCredential = await signInWithCredential(auth, credential);
+
+            // Save user info in Firestore
+            const { uid, email, displayName, photoURL } = userCredential.user;
+            await db.collection('users').doc(uid).set({
+                userName: displayName,
+                email: email,
+                photoURL: photoURL,
+                createdAt: new Date().toISOString(),
+            });
+
+            // Return success message or user data
+            return { message: "User logged in with Google successfully", user: userCredential.user };
+        } catch (error) {
+            throw new Error(error.message || "An error occurred while logging in with Google");
+        }
+    }
 
     async loginUser(email, password) {
         try {

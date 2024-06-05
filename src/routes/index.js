@@ -6,8 +6,11 @@ const postController = require('../controllers/post-controller');
 
 router.post('/api/register', firebaseAuthController.registerUser);
 router.post('/api/login', firebaseAuthController.loginUser);
-router.post('/api/logout', verifyToken,firebaseAuthController.logoutUser);
+router.post('/api/logout', verifyToken, firebaseAuthController.logoutUser);
 router.post('/api/reset-password', firebaseAuthController.resetPassword);
+
+// New route for Google login
+router.post('/api/login-with-google', verifyToken, firebaseAuthController.loginWithGoogle);
 
 // Example of a protected route
 router.get('/api/posts', verifyToken, postController.getPosts);

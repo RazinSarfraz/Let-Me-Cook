@@ -39,6 +39,21 @@ class FirebaseAuthController {
         }
     }
 
+    async loginWithGoogle(req, res) {
+        const { idToken } = req.body;
+        if (!idToken) {
+            return res.status(422).json({
+                error: "ID token is required",
+            });
+        }
+        try {
+            const result = await FirebaseAuthService.loginWithGoogle(idToken);
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
     async logoutUser(req, res) {
         try {
             const result = await FirebaseAuthService.logoutUser();

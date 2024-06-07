@@ -11,6 +11,7 @@ const {
 } = require("firebase/auth");
 
 const { getFirestore } = require('firebase-admin/firestore');
+const { getStorage } = require('firebase-admin/storage');
 
 const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
@@ -26,11 +27,13 @@ const serviceAccount = require("../firebaseService.json");
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET
 });
 
 firebase.initializeApp(firebaseConfig);
 
 const db = getFirestore();
+const storage = getStorage().bucket();
 
 module.exports = {
     getAuth,
@@ -40,5 +43,6 @@ module.exports = {
     sendEmailVerification,
     sendPasswordResetEmail,
     admin,
-    db
+    db,
+    storage
 };

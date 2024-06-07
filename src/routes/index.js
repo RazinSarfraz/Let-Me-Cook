@@ -3,6 +3,18 @@ const router = express.Router();
 const verifyToken = require('../middleware');
 const firebaseAuthController = require('../controllers/firebase-auth-controller');
 const postController = require('../controllers/post-controller');
+const imageController = require('../controllers/image-controller');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+const upload = multer({ storage: storage });
 
 router.post('/api/register', firebaseAuthController.registerUser);
 router.post('/api/login', firebaseAuthController.loginUser);
@@ -14,5 +26,8 @@ router.post('/api/login-with-google', verifyToken, firebaseAuthController.loginW
 
 // Example of a protected route
 router.get('/api/posts', verifyToken, postController.getPosts);
+
+router.post('/api/upload-image',verifyToken,upload.single('image'),imageController.processImage);
+
 
 module.exports = router;

@@ -1,7 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
-require("dotenv").config();
-const router = require("./routes");
+const router = require('./routes');
+require('dotenv').config();
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -16,7 +16,6 @@ app.get('/ping', (req, res) => {
         message: 'Success',
     });
 });
-
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);

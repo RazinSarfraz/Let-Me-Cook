@@ -1,10 +1,9 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const { GoogleAIFileManager } = require("@google/generative-ai/files"); // Ensure correct import
-
+const { GoogleAIFileManager } = require("@google/generative-ai/files");
 const apiKey = process.env.GEMINI_API_KEY;
 
 const genAI = new GoogleGenerativeAI(apiKey);
-const fileManager = new GoogleAIFileManager(apiKey); // Create an instance of the class
+const fileManager = new GoogleAIFileManager(apiKey);
 
 const visionModel = genAI.getGenerativeModel({
   model: "gemini-1.0-pro-vision-latest",

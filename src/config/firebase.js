@@ -7,7 +7,9 @@ const {
     signInWithEmailAndPassword,
     signOut,
     sendEmailVerification,
-    sendPasswordResetEmail
+    sendPasswordResetEmail,
+    GoogleAuthProvider,
+    signInWithCredential
 } = require("firebase/auth");
 
 const { getFirestore } = require('firebase-admin/firestore');
@@ -42,6 +44,8 @@ module.exports = {
     signOut,
     sendEmailVerification,
     sendPasswordResetEmail,
+    GoogleAuthProvider,
+    signInWithCredential,
     admin,
     db,
     storage

@@ -5,11 +5,13 @@ const {
     signOut,
     sendEmailVerification,
     sendPasswordResetEmail,
+    GoogleAuthProvider,
     db
 } = require('../config/firebase');
 const bcrypt = require('bcrypt');
 
 const auth = getAuth();
+const googleProvider = new GoogleAuthProvider();
 
 class FirebaseAuthService {
     async registerUser(email, password, userName, phone) {
@@ -40,13 +42,11 @@ class FirebaseAuthService {
             throw new Error(error.message || "An error occurred while registering user");
         }
     }
-    
+
     async loginWithGoogle(idToken) {
         try {
             // Verify the Google ID token
-            const credential = googleProvider.credential({
-                idToken: idToken,
-            });
+            const credential = GoogleAuthProvider.credential(idToken);
             const userCredential = await signInWithCredential(auth, credential);
 
             // Save user info in Firestore

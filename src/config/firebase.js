@@ -15,38 +15,41 @@ const {
 const { getFirestore } = require('firebase-admin/firestore');
 const { getStorage } = require('firebase-admin/storage');
 
-const firebaseConfig = {
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.FIREBASE_APP_ID
-};
-
 const admin = require('firebase-admin');
 const serviceAccount = require("../firebaseService.json");
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET
-});
+class FirebaseConfig {
+    constructor() {
+        const firebaseConfig = {
+            apiKey: process.env.FIREBASE_API_KEY,
+            authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+            projectId: process.env.FIREBASE_PROJECT_ID,
+            storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+            messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+            appId: process.env.FIREBASE_APP_ID
+        };
 
-firebase.initializeApp(firebaseConfig);
+        admin.initializeApp({
+            credential: admin.credential.cert(serviceAccount),
+            storageBucket: process.env.FIREBASE_STORAGE_BUCKET
+        });
 
-const db = getFirestore();
-const storage = getStorage().bucket();
+        firebase.initializeApp(firebaseConfig);
 
-module.exports = {
-    getAuth,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    signOut,
-    sendEmailVerification,
-    sendPasswordResetEmail,
-    GoogleAuthProvider,
-    signInWithCredential,
-    admin,
-    db,
-    storage
-};
+        this.getAuth = getAuth;
+        this.signInWithEmailAndPassword = signInWithEmailAndPassword;
+        this.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+        this.signOut = signOut;
+        this.sendEmailVerification = sendEmailVerification;
+        this.sendPasswordResetEmail = sendPasswordResetEmail;
+        this.GoogleAuthProvider = GoogleAuthProvider;
+        this.signInWithCredential = signInWithCredential;
+        this.admin = admin;
+        this.db = getFirestore();
+        this.storage = getStorage().bucket();
+    }
+}
+
+const firebaseConfig = new FirebaseConfig();
+
+module.exports = firebaseConfig;

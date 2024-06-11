@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 const verifyToken = require('../middleware');
 const firebaseAuthController = require('../controllers/firebase-auth-controller');
-const postController = require('../controllers/post-controller');
-const imageController = require('../controllers/image-controller');
+const geminiController = require('../controllers/gemini-controller');
 const multer = require('multer');
 
 const storage = multer.diskStorage({
@@ -24,10 +23,8 @@ router.post('/api/reset-password', firebaseAuthController.resetPassword);
 // New route for Google login
 router.post('/api/login-with-google', verifyToken, firebaseAuthController.loginWithGoogle);
 
-// Example of a protected route
-router.get('/api/posts', verifyToken, postController.getPosts);
 
-router.post('/api/upload-image',verifyToken,upload.single('image'),imageController.processImage);
+router.post('/api/upload-image', verifyToken, upload.single('image'), geminiController.processImage);
 
 
 module.exports = router;

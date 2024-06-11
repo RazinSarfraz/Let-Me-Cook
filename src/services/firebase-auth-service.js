@@ -1,17 +1,8 @@
-const {
-    getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut,
-    sendEmailVerification,
-    sendPasswordResetEmail,
-    GoogleAuthProvider,
-    db
-} = require('../config/firebase');
+const firebaseConfig = require('../config/firebase');
 const bcrypt = require('bcrypt');
 
-const auth = getAuth();
-const googleProvider = new GoogleAuthProvider();
+const auth = firebaseConfig.getAuth();
+
 
 class FirebaseAuthService {
     async registerUser(email, password, userName, phone) {
@@ -20,15 +11,15 @@ class FirebaseAuthService {
             const hashedPassword = await bcrypt.hash(password, 10);
 
             // Run Firestore transaction
-            await db.runTransaction(async (transaction) => {
+            await firebaseConfig.db.runTransaction(async (transaction) => {
                 // Create the user with Firebase Auth
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const userCredential = await firebaseConfig.createUserWithEmailAndPassword(auth, email, password);
 
                 // Send email verification
-                await sendEmailVerification(auth.currentUser);
+                await firebaseConfig.sendEmailVerification(auth.currentUser);
 
                 // Save user info in Firestore
-                transaction.set(db.collection('users').doc(userCredential.user.uid), {
+                transaction.set(firebaseConfig.db.collection('users').doc(userCredential.user.uid), {
                     userName,
                     email,
                     password: hashedPassword,
@@ -46,12 +37,12 @@ class FirebaseAuthService {
     async loginWithGoogle(idToken) {
         try {
             // Verify the Google ID token
-            const credential = GoogleAuthProvider.credential(idToken);
-            const userCredential = await signInWithCredential(auth, credential);
+            const credential = firebaseConfig.GoogleAuthProvider.credential(idToken);
+            const userCredential = await firebaseConfig.signInWithCredential(auth, credential);
 
             // Save user info in Firestore
             const { uid, email, displayName, photoURL } = userCredential.user;
-            await db.collection('users').doc(uid).set({
+            await firebaseConfig.db.collection('users').doc(uid).set({
                 userName: displayName,
                 email: email,
                 photoURL: photoURL,
@@ -67,7 +58,7 @@ class FirebaseAuthService {
 
     async loginUser(email, password) {
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const userCredential = await firebaseConfig.signInWithEmailAndPassword(auth, email, password);
             const idToken = userCredential._tokenResponse.idToken;
             if (!idToken) throw new Error("Internal Server Error");
             return { idToken, userCredential };
@@ -78,7 +69,7 @@ class FirebaseAuthService {
 
     async logoutUser() {
         try {
-            await signOut(auth);
+            await firebaseConfig.signOut(auth);
             return { message: "User logged out successfully" };
         } catch (error) {
             throw new Error("Internal Server Error");
@@ -88,14 +79,14 @@ class FirebaseAuthService {
     async resetPassword(email) {
         try {
             // Check if the user with the provided email exists in Firestore
-            const usersRef = db.collection('users');
+            const usersRef = firebaseConfig.db.collection('users');
             const querySnapshot = await usersRef.where('email', '==', email).get();
 
             if (querySnapshot.empty) {
                 throw new Error('No user found with the provided email');
             }
 
-            await sendPasswordResetEmail(auth, email);
+            await firebaseConfig.sendPasswordResetEmail(auth, email);
             return { message: "Password reset email sent successfully!" };
         } catch (error) {
             throw new Error(error.message || "An error occurred while sending password reset email");

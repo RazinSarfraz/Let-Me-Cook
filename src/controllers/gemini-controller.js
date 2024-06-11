@@ -1,7 +1,7 @@
 const geminiService = require('../services/geminiService');
 
 
-class ImageController {
+class GeminiController {
     async processImage(req, res) {
         const filePath = req.file.path;
         const mimeType = req.file.mimetype;
@@ -16,4 +16,4 @@ class ImageController {
     }
 }
 
-module.exports = new ImageController();
+module.exports = new GeminiController();

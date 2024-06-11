@@ -1,4 +1,4 @@
-const FirebaseAuthService = require('../services/firebase-auth-service');
+const firebaseAuthService = require('../services/firebase-auth-service');
 
 class FirebaseAuthController {
     async registerUser(req, res) {
@@ -12,7 +12,7 @@ class FirebaseAuthController {
             });
         }
         try {
-            const result = await FirebaseAuthService.registerUser(email, password, userName, phone);
+            const result = await firebaseAuthService.registerUser(email, password, userName, phone);
             res.status(201).json(result);
         } catch (error) {
             res.status(500).json({ error: error.message });
@@ -28,7 +28,7 @@ class FirebaseAuthController {
             });
         }
         try {
-            const { idToken, userCredential } = await FirebaseAuthService.loginUser(email, password);
+            const { idToken, userCredential } = await firebaseAuthService.loginUser(email, password);
             res.cookie('access_token', idToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production'
@@ -47,7 +47,7 @@ class FirebaseAuthController {
             });
         }
         try {
-            const result = await FirebaseAuthService.loginWithGoogle(idToken);
+            const result = await firebaseAuthService.loginWithGoogle(idToken);
             res.status(200).json(result);
         } catch (error) {
             res.status(500).json({ error: error.message });
@@ -56,7 +56,7 @@ class FirebaseAuthController {
 
     async logoutUser(req, res) {
         try {
-            const result = await FirebaseAuthService.logoutUser();
+            const result = await firebaseAuthService.logoutUser();
             res.clearCookie('access_token');
             res.status(200).json(result);
         } catch (error) {
@@ -72,7 +72,7 @@ class FirebaseAuthController {
             });
         }
         try {
-            const result = await FirebaseAuthService.resetPassword(email);
+            const result = await firebaseAuthService.resetPassword(email);
             res.status(200).json(result);
         } catch (error) {
             res.status(500).json({ error: error.message });

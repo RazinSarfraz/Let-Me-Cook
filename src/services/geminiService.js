@@ -68,11 +68,12 @@ class GeminiService {
           Exclude any non-food objects and background elements.
           If there are no food item or ingredient detected then return an empty list.
           Provide only the labels for each identified food item and ingredient.
-          The response must always be in the following format:
+          Your output must always be in the following format:
           "item1, item2, item3, item4, ...". 
         `;
+        
         const result = await this.runWithImagePrompt(file, prompt);
-
+        
         // Process the result into an array of items
         const items = result.split(',').map(item => item.trim()).filter(item => item !== '');
         // Prepare the response

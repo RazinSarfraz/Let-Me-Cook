@@ -25,6 +25,7 @@ router.post('/api/login-with-google', verifyToken, firebaseAuthController.loginW
 
 
 router.post('/api/upload-image', verifyToken, upload.single('image'), geminiController.processImage);
+router.post('/api/process-ingredients', verifyToken, geminiController.processIngredients);
 
 
 module.exports = router;

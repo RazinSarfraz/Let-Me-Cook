@@ -14,6 +14,12 @@ class GeminiController {
             res.status(500).json({ error: 'Failed to process image' });
         }
     }
+
+    async processIngredients(req, res) {
+        const items = req.body
+        console.log(items);
+        res.json(items);
+    }
 }
 
 module.exports = new GeminiController();

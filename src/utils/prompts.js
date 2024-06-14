@@ -9,9 +9,10 @@ async function getProcessIngredientsPrompt(items) {
     const prompt = `
             Here is a list of ingredients: ${items}.
             Please suggest recipes that can be made using strictly these ingredients you must not add any other ingredients outside of the provided list.
+            You must skip items in the list that are not a food item or ingredient and must not include them in the response
             The response must be in the following JSON format:
             {
-                "generalDescription": "<general description from gemini>",
+                "generalDescription": "<small description from gemini>",
                 "recipes": [
                     {
                         "title": "recipe name",
@@ -23,7 +24,7 @@ async function getProcessIngredientsPrompt(items) {
                             ".",
                             "step n"
                         ],
-                        "estimatedCalories": "estimated calories of the recipe based on the ingredients used"
+                        "estimatedCalories": "<example: 300-400>"
                     },
                     {
                         "title": "recipe name",
@@ -35,7 +36,7 @@ async function getProcessIngredientsPrompt(items) {
                             ".",
                             "step n"
                         ],
-                        "estimatedCalories": "estimated calories of the recipe based on the ingredients used"
+                        "estimatedCalories": "<example: 500-700>"
                     }
                 ]
             }

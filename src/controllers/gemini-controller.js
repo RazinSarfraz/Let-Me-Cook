@@ -16,9 +16,23 @@ class GeminiController {
     }
 
     async processIngredients(req, res) {
-        const items = req.body
-        console.log(items);
-        res.json(items);
+        const { items, imageId } = req.body;
+        const userId = req.user.uid;
+
+        // Validation checks
+        if (!items || items.length === 0) {
+            return res.status(400).json({ error: 'Items should not be empty' });
+        }
+        if (!imageId || imageId.trim() === '') {
+            return res.status(400).json({ error: 'Image ID should not be empty' });
+        }
+
+        try {
+            const result = await geminiService.processIngredients(items, userId, imageId);
+            res.json(result);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
     }
 }
 

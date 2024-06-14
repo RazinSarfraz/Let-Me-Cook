@@ -4,6 +4,7 @@ const verifyToken = require('../middleware');
 const firebaseAuthController = require('../controllers/firebase-auth-controller');
 const geminiController = require('../controllers/gemini-controller');
 const multer = require('multer');
+const userController = require('../controllers/user-controller');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -26,6 +27,10 @@ router.post('/api/login-with-google', verifyToken, firebaseAuthController.loginW
 
 router.post('/api/upload-image', verifyToken, upload.single('image'), geminiController.processImage);
 router.post('/api/process-ingredients', verifyToken, geminiController.processIngredients);
+
+router.get('/api/history', verifyToken, userController.getHistory);
+
+router.delete('/api/delete', verifyToken, userController.deleteImageById);
 
 
 module.exports = router;

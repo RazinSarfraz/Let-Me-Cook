@@ -8,7 +8,7 @@ class GeminiConfig {
     this.fileManager = new GoogleAIFileManager(this.apiKey);
 
     this.visionModel = this.genAI.getGenerativeModel({
-      model: "gemini-1.0-pro-vision-latest",
+      model: "gemini-1.5-pro",
     });
 
     this.textModel = this.genAI.getGenerativeModel({
